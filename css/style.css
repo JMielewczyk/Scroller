@@ -1,0 +1,26 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.section {
+  width: 100vw;
+  height: 100vh;
+}
+
+.section:nth-child(1) {
+  background-color: antiquewhite;
+}
+
+.section:nth-child(2) {
+  background-color: rgb(70, 131, 146);
+}
+
+.section:nth-child(3) {
+  background-color: rgb(65, 48, 160);
+}
+
+.section:nth-child(4) {
+  background-color: rgb(151, 58, 58);
+}/*# sourceMappingURL=style.css.map */
