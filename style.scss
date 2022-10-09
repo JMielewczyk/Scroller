@@ -8,6 +8,10 @@ body {
     overflow: hidden;
 }
 
+.main {
+    transition: 1s;
+}
+
 .section-selector {
     display: flex;
     flex-direction: column;
@@ -17,8 +21,10 @@ body {
     width: 25px;
     position: fixed;
     top: 50vh;
-    transform: translateY(-100%);
+    transform: translateY(-50%);
     right: 10px;
+    scroll-behavior: smooth;
+    transition: 1s;
     .dot {
         border: 1px solid black;
         width: 20px;

@@ -45,12 +45,44 @@ window.addEventListener('wheel', (e) => {
     scrollInto(currentSection)
 })
 
-function scrollInto(value) {
-    sections[currentSection].scrollIntoView({
+function scrollInto(value, mobile) {
+    if (mobile) {
+        console.log(currentSection)
+        const position = `translateY(-${sections[currentSection].offsetTop}px)`
+        const positionNav = `calc(${sections[currentSection].offsetTop}px + 50vh)`;
+        main.style.transform = position;
+        sectionSelector.style.top = positionNav;
+    }
+    sections[value].scrollIntoView({
         behavior: 'smooth',
         block: "start",
     })
     allDots.forEach(dot => dot.classList.remove('active'))
-    allDots[currentSection].classList.add('active')
+    allDots[value].classList.add('active')
 }
 scrollInto(currentSection)
+
+let touchStart_value;
+let touchEnd_value;
+let swipe;
+
+window.addEventListener('touchstart', (e) => {
+    touchStart_value = e.touches[0].clientY
+})
+window.addEventListener('touchmove', (e) => {
+    touchEnd_value = e.touches[0].clientY
+})
+window.addEventListener('touchend', (e) => {
+    detectSwipe(touchStart_value, touchEnd_value)
+})
+
+function detectSwipe(value_start, value_end) {
+    if (Math.abs(value_start) > Math.abs(value_end)) {
+        if (currentSection === sections.length - 1) return
+        currentSection++
+    } else {
+        if (currentSection === 0) return
+        currentSection--
+    }
+    scrollInto(currentSection, true)
+}
