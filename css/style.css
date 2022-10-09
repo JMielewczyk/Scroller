@@ -8,12 +8,31 @@ body {
   overflow: hidden;
 }
 
+.section-selector {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  height: 100px;
+  width: 25px;
+  position: fixed;
+  top: 50vh;
+  transform: translateY(-100%);
+  right: 10px;
+}
+.section-selector .dot {
+  border: 1px solid black;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+.section-selector .dot.active {
+  background-color: black;
+}
+
 .section {
   width: 100vw;
   height: 100vh;
-}
-
-.section:nth-child(1) {
   background-color: antiquewhite;
 }
 
