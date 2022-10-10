@@ -1,12 +1,24 @@
 const sections = document.querySelectorAll('.section');
 const main = document.querySelector('.main');
 const sectionSelector = document.querySelector('.section-selector');
-let allDots;
 
+let allDots;
+let is_touchDevice = false;
 let currentSection = 0;
 let isThrottled = false;
+let touchStart_value;
+let touchEnd_value;
 
-const addDots = () => {
+
+function isTouchDevice() {
+    if (navigator.maxTouchPoints > 0) {
+        is_touchDevice = true
+    }
+}
+isTouchDevice();
+
+
+const createNavigation = () => {
     for (section of sections) {
         const element = document.createElement('div');
         element.classList.add('dot')
@@ -14,27 +26,34 @@ const addDots = () => {
     }
     allDots = [...document.querySelectorAll('.dot')]
 }
-addDots()
+createNavigation()
 
 
 const chooseSection = (e) => {
     if (e.target.classList.value === 'dot') {
         const index = allDots.indexOf(e.target)
         currentSection = index;
-        scrollInto(currentSection)
+        scrollInto(currentSection, is_touchDevice)
     }
 }
 sectionSelector.addEventListener('click', chooseSection)
 
-window.addEventListener('wheel', (e) => {
+
+const wheel_scrollValue = (e) => {
+    is_touchDevice = false;
     if (isThrottled) return
     isThrottled = true;
 
     setTimeout(() => {
         isThrottled = false
-    }, 300)
-
+    }, 600)
     const direction = e.deltaY > 0 ? 1 : -1;
+    calc_currentSection(direction)
+}
+window.addEventListener('wheel', wheel_scrollValue);
+
+
+const calc_currentSection = (direction) => {
     if (direction === 1) {
         if (sections.length - 1 === currentSection) return
         currentSection++
@@ -42,29 +61,38 @@ window.addEventListener('wheel', (e) => {
         if (currentSection === 0) return
         currentSection--
     }
-    scrollInto(currentSection)
-})
+    scrollInto(currentSection, is_touchDevice)
+}
 
-function scrollInto(value, mobile) {
-    if (mobile) {
-        console.log(currentSection)
+
+const is_arrowKey = (e) => {
+    if (e.key === 'ArrowDown') {
+        calc_currentSection(1);
+    } else if (e.key === 'ArrowUp') {
+        calc_currentSection(-1);
+    } else return
+}
+document.addEventListener('keydown', is_arrowKey)
+
+
+function scrollInto(value, is_touchDevice) {
+    if (is_touchDevice === true) {
         const position = `translateY(-${sections[currentSection].offsetTop}px)`
         const positionNav = `calc(${sections[currentSection].offsetTop}px + 50vh)`;
         main.style.transform = position;
         sectionSelector.style.top = positionNav;
+    } else {
+        sections[value].scrollIntoView({
+            behavior: 'smooth',
+            block: "start",
+        })
     }
-    sections[value].scrollIntoView({
-        behavior: 'smooth',
-        block: "start",
-    })
+
     allDots.forEach(dot => dot.classList.remove('active'))
     allDots[value].classList.add('active')
 }
 scrollInto(currentSection)
 
-let touchStart_value;
-let touchEnd_value;
-let swipe;
 
 window.addEventListener('touchstart', (e) => {
     touchStart_value = e.touches[0].clientY
@@ -74,9 +102,13 @@ window.addEventListener('touchmove', (e) => {
 })
 window.addEventListener('touchend', (e) => {
     detectSwipe(touchStart_value, touchEnd_value)
+    touchStart_value = false;
+    touchEnd_value = false;
 })
 
+
 function detectSwipe(value_start, value_end) {
+    if (!value_end) return
     if (Math.abs(value_start) > Math.abs(value_end)) {
         if (currentSection === sections.length - 1) return
         currentSection++
@@ -84,5 +116,6 @@ function detectSwipe(value_start, value_end) {
         if (currentSection === 0) return
         currentSection--
     }
-    scrollInto(currentSection, true)
+    is_touchDevice = true
+    scrollInto(currentSection, is_touchDevice)
 }

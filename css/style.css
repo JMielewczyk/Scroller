@@ -9,7 +9,7 @@ body {
 }
 
 .main {
-  transition: 1s;
+  transition: 0.7s;
 }
 
 .section-selector {
@@ -24,7 +24,7 @@ body {
   transform: translateY(-50%);
   right: 10px;
   scroll-behavior: smooth;
-  transition: 1s;
+  transition: 0.7s;
 }
 .section-selector .dot {
   border: 1px solid black;
